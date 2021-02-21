@@ -1,0 +1,12 @@
+# ignore
+**/.ipynb_checkpoints
+**/__pycache__
+.vscode
+**/*.cfg
+.terraform
+**.zip
+**.tfstate
+**.tfstate.backup
+**.tfstate.lock.info
+log/**
+**.pem
