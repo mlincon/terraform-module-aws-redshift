@@ -1,19 +1,19 @@
 variable "region" {
   type        = string
   description = "AWS region"
-  default = "eu-central-1"
+  default     = "eu-central-1"
 }
 
 variable "profile" {
   type        = string
   description = "AWS profile"
-  default = "default"
+  default     = "default"
 }
 
 variable "credentials_file" {
   type        = string
   description = "Path to the AWS credentials file"
-  default = "~/.aws/credentials"
+  default     = "~/.aws/credentials"
 }
 
 variable "default_tags" {
@@ -27,7 +27,7 @@ variable "default_tags" {
 variable "vpc_cidr_block" {
   type        = string
   description = "The CIDR block for the VPC associated with Redshift"
-  default = "10.0.0.0/16"
+  default     = "10.0.0.0/16"
 }
 
 variable "number_of_redshift_subnets" {
@@ -66,13 +66,13 @@ variable "redshift_master_username" {
   default     = "awsuser"
 }
 
-variable "redshift_master_pass" {
+variable "redshift_master_password" {
   type        = string
   description = "Password for the master DB user"
-  default     = "a-very-weak-password!"
+  default     = "A-very-weak-password!1"
 }
 
-variable "redshift_nodetype" {
+variable "redshift_node_type" {
   type        = string
   description = "The node type to be provisioned for the cluster"
   default     = "dc2.large"
@@ -88,4 +88,16 @@ variable "redshift_cluster_port" {
   type        = number
   description = "The port number on which the cluster accepts incoming connections"
   default     = 5439
+}
+
+variable "redshift_skip_final_snapshot" {
+  type        = bool
+  description = "Determines whether a final snapshot of the cluster is created before Amazon Redshift deletes the cluster. If true , a final cluster snapshot is not created"
+  default     = true
+}
+
+variable "redshift_publicly_accessible" {
+  type        = bool
+  description = "If true, the cluster can be accessed from a public network"
+  default     = true
 }
