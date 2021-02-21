@@ -15,8 +15,6 @@ resource "aws_internet_gateway" "ig" {
 
 # Open default Redshift port
 # Allow ingress only from my IPv4 address
-
-
 resource "aws_security_group" "sg" {
   depends_on = [aws_vpc.vpc]
 
@@ -41,11 +39,27 @@ resource "aws_security_group" "sg" {
 # ... have a fixed and variable part in the subnet CIDRs
 # ... the variable part will change based on the subnet
 resource "aws_subnet" "redshift_subnets" {
+  depends_on = [ aws_vpc.vpc ]
+
+  # create as many subnets as counts
   count = var.number_of_redshift_subnets
 
   vpc_id = aws_vpc.vpc.id
   cidr_block = element(local.redshift_subnet_cidrs, count.index)
   availability_zone = element(local.redshift_subnet_azs, count.index)
+
+  tags = var.default_tags
 }
 
+# create the redshift subnet group
+# you create a cluster subnet group if you are provisioning your cluster in VPC
+# Redshift creates the cluster on one of the subnets in the group
+resource "aws_redshift_subnet_group" "redshift_subnet_group" {
+  name = var.redshift_subnet_group_name
 
+  # use splat expression to get the ids of all the subnets
+  # https://www.terraform.io/docs/language/expressions/splat.html
+  subnet_ids = aws_subnet.redshift_subnets[*].id
+
+  tags = var.default_tags
+}

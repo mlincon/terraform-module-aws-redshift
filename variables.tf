@@ -21,15 +21,19 @@ variable "default_tags" {
   }
 }
 
-
 variable "vpc_cidr_block" {
   type        = string
   description = "The CIDR block for the VPC associated with Redshift"
 }
 
-
 variable "number_of_redshift_subnets" {
   type = number
   description = "The number of subsets for redshift cluster"
   default = 2
+}
+
+variable "redshift_subnet_group_name" {
+  type        = string
+  description = "The name of the Redshift subnet group"
+  default = "redshift-subnet-group"
 }
