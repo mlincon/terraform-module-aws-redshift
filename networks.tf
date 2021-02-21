@@ -40,13 +40,13 @@ resource "aws_security_group" "sg" {
 # ... have a fixed and variable part in the subnet CIDRs
 # ... the variable part will change based on the subnet
 resource "aws_subnet" "redshift_subnets" {
-  depends_on = [ aws_vpc.vpc ]
+  depends_on = [aws_vpc.vpc]
 
   # create as many subnets as counts
   count = var.number_of_redshift_subnets
 
-  vpc_id = aws_vpc.vpc.id
-  cidr_block = element(local.redshift_subnet_cidrs, count.index)
+  vpc_id            = aws_vpc.vpc.id
+  cidr_block        = element(local.redshift_subnet_cidrs, count.index)
   availability_zone = element(local.redshift_subnet_azs, count.index)
 
   tags = var.default_tags

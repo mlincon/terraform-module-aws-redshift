@@ -16,8 +16,8 @@ locals {
   # subnet CIDRs
   # output should be 10.0.1.0/24 and 10.0.2.0/24
   redshift_subnet_cidrs = [
-    for az in local.availability_zones:
-      "${local.subnet_cidr_fixed_part}.${index(local.availability_zones, az) + 1}.0/24"
-      if index(local.availability_zones, az) < var.number_of_redshift_subnets
+    for az in local.availability_zones :
+    "${local.subnet_cidr_fixed_part}.${index(local.availability_zones, az) + 1}.0/24"
+    if index(local.availability_zones, az) < var.number_of_redshift_subnets
   ]
 } 

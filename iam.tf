@@ -8,15 +8,15 @@ locals {
 
 data "template_file" "redshift_iam_policy" {
   template = file("assume_role_policy.json")
-  
+
   vars = {
-      aws_services_list = join(", ", local.aws_services)
+    aws_services_list = join(", ", local.aws_services)
   }
 }
 
 # render the policy json file
 resource "aws_iam_role" "redshift_role" {
-  name = var.redshift_role_name 
+  name               = var.redshift_role_name
   assume_role_policy = data.template_file.redshift_iam_policy.rendered
 
   tags = var.default_tags
@@ -35,6 +35,6 @@ resource "aws_iam_role_policy_attachment" "redshift_role_policies" {
     "arn:aws:iam::aws:policy/AmazonS3FullAccess"
   ])
 
-  role = aws_iam_role.redshift_role.id
+  role       = aws_iam_role.redshift_role.id
   policy_arn = each.value
 }
