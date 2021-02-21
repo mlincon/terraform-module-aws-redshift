@@ -15,10 +15,7 @@ resource "aws_internet_gateway" "ig" {
 
 # Open default Redshift port
 # Allow ingress only from my IPv4 address
-# get IPv4: https://stackoverflow.com/a/53782560/11868112
-data "http" "myipv4" {
-  url = "http://ipv4.icanhazip.com"
-}
+
 
 resource "aws_security_group" "sg" {
   depends_on = [aws_vpc.vpc]
@@ -29,7 +26,7 @@ resource "aws_security_group" "sg" {
     from_port   = 5439
     to_port     = 5439
     protocol    = "tcp"
-    cidr_blocks = ["${chomp(data.http.myipv4.body)}/32"]
+    cidr_blocks = [local.sg_ingress_cidr]
     description = "Redshift_port"
   }
 
@@ -39,4 +36,16 @@ resource "aws_security_group" "sg" {
 
 # Subnets
 # Create two subnets to use when creating Redshift subnet group
-# Instead of hard-coding the number of subnets and the corresponding CIDRs, we will 
+# Instead of hard-coding the number of subnets and the corresponding CIDRs,
+# ... use variables to set the number of subnets where the max number is limited to the number of AZs
+# ... have a fixed and variable part in the subnet CIDRs
+# ... the variable part will change based on the subnet
+resource "aws_subnet" "redshift_subnets" {
+  count = var.number_of_redshift_subnets
+
+  vpc_id = aws_vpc.vpc.id
+  cidr_block = element(local.redshift_subnet_cidrs, count.index)
+  availability_zone = element(local.redshift_subnet_azs, count.index)
+}
+
+

@@ -9,3 +9,4 @@
 
 ##### Reference:
 - [Terraforming and Connecting to an AWS Redshift Cluster](https://medium.com/faun/terraforming-and-connecting-to-your-aws-redshift-cluster-16f93ddd41cc)
+- [Terraform AWS Dynamic Subsets](https://medium.com/prodopsio/terraform-aws-dynamic-subnets-455619dd1977)
