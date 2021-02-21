@@ -5,6 +5,7 @@ resource "aws_vpc" "vpc" {
   tags = var.default_tags
 }
 
+
 # Attach Internet Gateway to the above VPC so that it's accessible from internet
 # This will allow instances and devices outside the VPC to connect to database through the cluster endpoint
 resource "aws_internet_gateway" "ig" {
@@ -50,6 +51,7 @@ resource "aws_subnet" "redshift_subnets" {
 
   tags = var.default_tags
 }
+
 
 # create the redshift subnet group
 # you create a cluster subnet group if you are provisioning your cluster in VPC
