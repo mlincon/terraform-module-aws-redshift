@@ -4,7 +4,9 @@
         {
             "Effect": "Allow",
             "Principal": {
-                "Service": "${aws_services_list}"
+                "Service": [
+                    "${aws_services_list}"
+                ]
             },
             "Action": "sts:AssumeRole"
         }

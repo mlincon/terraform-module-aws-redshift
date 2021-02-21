@@ -37,3 +37,9 @@ variable "redshift_subnet_group_name" {
   description = "The name of the Redshift subnet group"
   default = "redshift-subnet-group"
 }
+
+variable "redshift_role_name" {
+    type        = string
+  description = "The name of the Redshift IAM role"
+  default = "redshift-role"
+}
