@@ -1,16 +1,19 @@
 variable "region" {
   type        = string
   description = "AWS region"
+  default = "eu-central-1"
 }
 
 variable "profile" {
   type        = string
   description = "AWS profile"
+  default = "default"
 }
 
 variable "credentials_file" {
   type        = string
   description = "Path to the AWS credentials file"
+  default = "~/.aws/credentials"
 }
 
 variable "default_tags" {
@@ -24,22 +27,65 @@ variable "default_tags" {
 variable "vpc_cidr_block" {
   type        = string
   description = "The CIDR block for the VPC associated with Redshift"
+  default = "10.0.0.0/16"
 }
 
 variable "number_of_redshift_subnets" {
-  type = number
+  type        = number
   description = "The number of subsets for redshift cluster"
-  default = 2
+  default     = 2
 }
 
 variable "redshift_subnet_group_name" {
   type        = string
   description = "The name of the Redshift subnet group"
-  default = "redshift-subnet-group"
+  default     = "redshift-subnet-group"
 }
 
 variable "redshift_role_name" {
-    type        = string
+  type        = string
   description = "The name of the Redshift IAM role"
-  default = "redshift-role"
+  default     = "redshift-role"
+}
+
+variable "redshift_cluster_identifier" {
+  type        = string
+  description = "The name of the cluster identifier"
+  default     = "redshift-cluster"
+}
+
+variable "redshift_database_name" {
+  type        = string
+  description = "The name of the first database to be created when the cluster is created"
+  default     = "dev"
+}
+
+variable "redshift_master_username" {
+  type        = string
+  description = "Username for the master DB user"
+  default     = "awsuser"
+}
+
+variable "redshift_master_pass" {
+  type        = string
+  description = "Password for the master DB user"
+  default     = "a-very-weak-password!"
+}
+
+variable "redshift_nodetype" {
+  type        = string
+  description = "The node type to be provisioned for the cluster"
+  default     = "dc2.large"
+}
+
+variable "redshift_cluster_type" {
+  type        = string
+  description = "The cluster type to use. Either single-node or multi-node"
+  default     = "single-node"
+}
+
+variable "redshift_cluster_port" {
+  type        = number
+  description = "The port number on which the cluster accepts incoming connections"
+  default     = 5439
 }
