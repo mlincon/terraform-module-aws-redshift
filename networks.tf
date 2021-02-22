@@ -16,20 +16,26 @@ resource "aws_internet_gateway" "ig" {
 
 # Open default Redshift port
 # Allow ingress only from my IPv4 address
+
+# here we define the ingress rule in a separate resource instead of using an inline block in the aws_security_group resource
+# in order to avoid errors resulting from routing rules conflict as a result of mixing both inline blocks and separate resources
+# when creating a modules it is preferrable to use a separate resource instead of inline block
 resource "aws_security_group" "sg" {
   depends_on = [aws_vpc.vpc]
-
+  
   vpc_id = aws_vpc.vpc.id
 
-  ingress {
-    from_port   = 5439
-    to_port     = 5439
-    protocol    = "tcp"
-    cidr_blocks = [local.sg_ingress_cidr]
-    description = "Redshift_port"
-  }
-
   tags = var.default_tags
+}
+
+resource "aws_security_group_rule" "allow_http_inbound"{
+  type = "ingress"
+  security_group_id = aws_security_group.sg.id
+  from_port   = 5439
+  to_port     = 5439
+  protocol    = "tcp"
+  cidr_blocks = [local.sg_ingress_cidr]
+  description = "Redshift_port"
 }
 
 
