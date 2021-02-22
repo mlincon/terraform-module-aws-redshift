@@ -7,7 +7,8 @@ locals {
 }
 
 data "template_file" "redshift_iam_policy" {
-  template = file("assume_role_policy.json")
+  # path.module returns the filesystem path of the module where the expression is defined
+  template = file("${path.module}/assume_role_policy.json")
 
   vars = {
     aws_services_list = join(", ", local.aws_services)
