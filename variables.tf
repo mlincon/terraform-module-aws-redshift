@@ -69,7 +69,6 @@ variable "redshift_master_username" {
 variable "redshift_master_password" {
   type        = string
   description = "Password for the master DB user"
-  default     = "A-very-weak-password!1"
 }
 
 variable "redshift_node_type" {
