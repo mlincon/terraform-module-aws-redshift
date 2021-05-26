@@ -25,9 +25,9 @@ resource "aws_iam_role" "redshift_role" {
 
 
 # assign permission policy to the role
-# since we'll using AWS managed policies, we will use the aws_iam_role_policy_attachment resource
+# since we'll be using AWS managed policies, we will use the aws_iam_role_policy_attachment resource
 # if we implemented the policy in terraform (i.e. created ourselves), 
-# we will use the resource aws_iam_role_policy at first
+# we would have used the resource aws_iam_role_policy at first
 
 # https://stackoverflow.com/a/62281561/11868112
 # https://www.terraform.io/docs/language/meta-arguments/for_each.html
