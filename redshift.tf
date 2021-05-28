@@ -13,9 +13,14 @@ resource "aws_redshift_cluster" "redshift_cluster" {
   node_type                 = var.redshift_node_type
   cluster_type              = var.redshift_cluster_type
   cluster_subnet_group_name = aws_redshift_subnet_group.redshift_subnet_group.id
-  skip_final_snapshot       = var.redshift_skip_final_snapshot
-  iam_roles                 = [aws_iam_role.redshift_role.arn]
-  publicly_accessible       = var.redshift_publicly_accessible
+
+  skip_final_snapshot = var.redshift_skip_final_snapshot
+
+  iam_roles = [aws_iam_role.redshift_role.arn]
+
+  vpc_security_group_ids = [aws_security_group.sg.id]
+
+  publicly_accessible = var.redshift_publicly_accessible
 
   tags = var.default_tags
 }
