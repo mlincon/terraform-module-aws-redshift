@@ -33,7 +33,7 @@ variable "vpc_cidr_block" {
 variable "number_of_redshift_subnets" {
   type        = number
   description = "The number of subsets for redshift cluster"
-  default     = 2
+  default     = 1
 }
 
 variable "redshift_subnet_group_name" {

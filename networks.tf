@@ -14,6 +14,17 @@ resource "aws_internet_gateway" "ig" {
   tags = var.default_tags
 }
 
+# routing table to direct traffic to and from internet gateway
+resource "aws_route_table" "rt-igw" {
+  vpc_id = aws_vpc.vpc.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.ig.id
+  }
+
+  tags = var.default_tags
+}
+
 # Open default Redshift port
 # Allow ingress only from my IPv4 address
 
@@ -22,20 +33,30 @@ resource "aws_internet_gateway" "ig" {
 # when creating a modules it is preferrable to use a separate resource instead of inline block
 resource "aws_security_group" "sg" {
   depends_on = [aws_vpc.vpc]
-  
+
   vpc_id = aws_vpc.vpc.id
 
   tags = var.default_tags
 }
 
-resource "aws_security_group_rule" "allow_http_inbound"{
-  type = "ingress"
+resource "aws_security_group_rule" "allow_tcp_inbound" {
+  type              = "ingress"
   security_group_id = aws_security_group.sg.id
-  from_port   = 5439
-  to_port     = 5439
-  protocol    = "tcp"
-  cidr_blocks = [local.sg_ingress_cidr]
-  description = "Redshift_port"
+  from_port         = 5439
+  to_port           = 5439
+  protocol          = "tcp"
+  cidr_blocks       = [local.sg_ingress_cidr]
+  description       = "Redshift_port"
+}
+
+resource "aws_security_group_rule" "allow_all_outbound" {
+  type              = "egress"
+  security_group_id = aws_security_group.sg.id
+  from_port         = 0
+  to_port           = 0
+  protocol          = -1
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "Redshift_sg_outbound"
 }
 
 
@@ -51,13 +72,21 @@ resource "aws_subnet" "redshift_subnets" {
   # create as many subnets as counts
   count = var.number_of_redshift_subnets
 
-  vpc_id            = aws_vpc.vpc.id
-  cidr_block        = element(local.redshift_subnet_cidrs, count.index)
-  availability_zone = element(local.redshift_subnet_azs, count.index)
+  vpc_id                  = aws_vpc.vpc.id
+  cidr_block              = element(local.redshift_subnet_cidrs, count.index)
+  availability_zone       = element(local.redshift_subnet_azs, count.index)
+  map_public_ip_on_launch = true
 
   tags = var.default_tags
 }
 
+# associate route table to the subnets
+resource "aws_route_table_association" "public-rt-association" {
+  count = var.number_of_redshift_subnets
+
+  subnet_id      = element(aws_subnet.redshift_subnets[*].id, count.index)
+  route_table_id = aws_route_table.rt-igw.id
+}
 
 # create the redshift subnet group
 # you create a cluster subnet group if you are provisioning your cluster in VPC
