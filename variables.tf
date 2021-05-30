@@ -83,6 +83,12 @@ variable "redshift_cluster_type" {
   default     = "single-node"
 }
 
+variable "redshift_number_of_nodes" {
+  type        = number
+  description = "The number of compute nodes in the cluster"
+  default     = 1
+}
+
 variable "redshift_cluster_port" {
   type        = number
   description = "The port number on which the cluster accepts incoming connections"
